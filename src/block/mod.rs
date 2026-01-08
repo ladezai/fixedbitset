@@ -17,6 +17,7 @@ use core::hash::{Hash, Hasher};
     not(target_feature = "sse2"),
     not(target_feature = "avx"),
     not(target_feature = "avx2"),
+    not(target_feature = "neon"),
 ))]
 mod default;
 #[cfg(all(
@@ -24,6 +25,7 @@ mod default;
     not(target_feature = "sse2"),
     not(target_feature = "avx"),
     not(target_feature = "avx2"),
+    not(target_feature = "neon"),
 ))]
 pub use self::default::*;
 
@@ -70,6 +72,11 @@ pub use self::avx2::*;
 mod wasm;
 #[cfg(all(target_family = "wasm", target_feature = "simd128"))]
 pub use self::wasm::*;
+
+#[cfg(all(target_feature = "neon", target_arch = "aarch64"))]
+mod neon;
+#[cfg(all(target_feature = "neon", target_arch = "aarch64"))]
+pub use self::neon::*;
 
 impl Block {
     pub const USIZE_COUNT: usize = core::mem::size_of::<Self>() / core::mem::size_of::<usize>();
